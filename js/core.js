@@ -14,6 +14,7 @@ const App = (() => {
     anon: "",                             // anonymous id (匿名标识, non-PII)
     firstSeen: "",                        // local first-seen date; V2 reconciles vs server-first-seen
     lastSeen: "",                         // for revisit detection (回访)
+    langChosen: false,                    // has the user confirmed a language on first run?
   });
 
   let S = load();
@@ -41,8 +42,49 @@ const App = (() => {
   }
   function setLang(lang) {
     S.lang = lang; save();
+    document.getElementById("lang-select").value = lang;
     applyI18n(); renderTasks(); renderProfile();
     document.dispatchEvent(new CustomEvent("alga:lang"));
+  }
+  // Device-language初判: kk→kk, ru→ru, everything else falls to ru (KZ lingua franca).
+  function detectLang() {
+    const l = (navigator.language || "ru").toLowerCase();
+    if (l.startsWith("kk")) return "kk";
+    if (l.startsWith("ru")) return "ru";
+    return "ru";
+  }
+  // First-run: preselect detected language, let the user confirm/switch on the first screen.
+  function firstRunLangConfirm() {
+    if (S.langChosen) return;
+    S.lang = detectLang();
+    document.documentElement.lang = S.lang; applyI18n();
+    const opts = [["kk", "Қазақша"], ["ru", "Русский"], ["en", "English"]];
+    openModal(t("lang_confirm_title"),
+      `<p class="muted">${t("lang_confirm_sub")}</p>` +
+      `<div class="lang-choices">` +
+      opts.map(([v, n]) =>
+        `<button class="lang-choice${v === S.lang ? " sel" : ""}" data-lang="${v}">${n}</button>`).join("") +
+      `</div><button class="btn-primary" id="lang-ok">${t("lang_confirm_ok")}</button>`);
+    document.querySelectorAll(".lang-choice").forEach(b => {
+      b.onclick = () => {
+        document.querySelectorAll(".lang-choice").forEach(x => x.classList.remove("sel"));
+        b.classList.add("sel");
+        setLang(b.dataset.lang);
+      };
+    });
+    document.getElementById("lang-ok").onclick = () => {
+      S.langChosen = true; save();
+      track("lang_confirm", { lang: S.lang });
+      closeModal();
+    };
+  }
+  // Share (分享): native share sheet where available, else copy the link. Records share_click.
+  function share() {
+    const url = location.origin + location.pathname;
+    const data = { title: "Alga Play", text: t("share_text"), url };
+    track("share_click", { via: navigator.share ? "native" : "copy" });
+    if (navigator.share) { navigator.share(data).catch(() => {}); }
+    else { navigator.clipboard?.writeText(url).then(() => toast(t("copied")), () => {}); }
   }
 
   /* ---------- router ---------- */
@@ -177,7 +219,8 @@ const App = (() => {
     { id: "win1",  label: "task_win1",  goal: 1, field: "wins", reward: 80 },
     { id: "play3", label: "task_play3", goal: 3, field: "play", reward: 120 },
   ];
-  function today() { return new Date().toISOString().slice(0, 10); }
+  // Task/day boundary = fixed UTC+5 (Kazakhstan). V2 keeps the same authority (server UTC+5).
+  function today() { return new Date(Date.now() + 5 * 3600e3).toISOString().slice(0, 10); }
   function touchTasks() {
     if (S.tasks.date !== today()) S.tasks = { date: today(), play: 0, wins: 0, claimed: {} };
   }
@@ -211,6 +254,16 @@ const App = (() => {
       box.appendChild(row);
     });
     renderProbe(box);
+    // 任务置顶: surface claimable count on the section title (fix D10)
+    const claimable = TASKS.filter(tk => S.tasks[tk.field] >= tk.goal && !S.tasks.claimed[tk.id]).length;
+    const title = document.querySelector('#view-lobby .lobby-columns .section-title');
+    if (title) {
+      title.querySelector(".claim-badge")?.remove();
+      if (claimable > 0) {
+        const badge = el("span", "claim-badge", "+" + claimable);
+        title.appendChild(badge);
+      }
+    }
   }
 
   /* ---------- payment-intent probe (付费探针): fake tier, records intent only, no money ---------- */
@@ -298,15 +351,20 @@ const App = (() => {
     document.getElementById("modal-backdrop").addEventListener("click", e => {
       if (e.target.id === "modal-backdrop") closeModal();
     });
+    // Esc closes any dismissable modal (fix D12)
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape" && !document.getElementById("modal-backdrop").hidden) closeModal();
+    });
     applyI18n(); renderTasks(); renderProfile();
     trackSession();
     go((location.hash || "#lobby").slice(1));
+    firstRunLangConfirm();   // first screen: confirm detected language
   }
 
   return {
     init, go, t, setLang, lang: () => S.lang,
     beans, addBeans, canAfford, tryStake, reportGame, track, emitGameStart,
-    displayName, openModal, closeModal, toast,
+    displayName, openModal, closeModal, toast, share,
     el, shuffle, sleep, escapeHtml,
   };
 })();

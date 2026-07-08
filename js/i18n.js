@@ -127,6 +127,14 @@ const I18N = {
     probe_sub: "Тегін ойнай беріңіз. Қаласаңыз, кейін қолдай аласыз.",
     probe_tier: "25 жұлдыз дән ≈ 500 ₸",
     probe_thanks: "Қызығушылығыңызға рахмет! Жақында қосылады.",
+    lang_confirm_title: "Тіл / Язык",
+    lang_confirm_sub: "Құрылғы тіліне қарай таңдалды. Растаңыз немесе өзгертіңіз.",
+    lang_confirm_ok: "Растау",
+    profile_local_hint: "Профиль осы құрылғыда сақталады. Кіргеннен кейін мәңгілік сақталады.",
+    share_btn: "Досқа жіберу",
+    share_text: "Alga Play — қазақ ойындарын ойна!",
+    copied: "Сілтеме көшірілді",
+    feedback_link: "Кері байланыс (Telegram)",
   },
 
   ru: {
@@ -252,6 +260,14 @@ const I18N = {
     probe_sub: "Играйте бесплатно. При желании сможете поддержать позже.",
     probe_tier: "25 звёздных бобов ≈ 500 ₸",
     probe_thanks: "Спасибо за интерес! Скоро будет доступно.",
+    lang_confirm_title: "Тіл / Язык",
+    lang_confirm_sub: "Определён по языку устройства. Подтвердите или измените.",
+    lang_confirm_ok: "Подтвердить",
+    profile_local_hint: "Профиль хранится на этом устройстве. После входа сохранится навсегда.",
+    share_btn: "Отправить другу",
+    share_text: "Alga Play — играй в казахские игры!",
+    copied: "Ссылка скопирована",
+    feedback_link: "Обратная связь (Telegram)",
   },
 
   en: {
@@ -377,5 +393,13 @@ const I18N = {
     probe_sub: "Play free. If you like it, you can support us later.",
     probe_tier: "25 star beans ≈ 500 ₸",
     probe_thanks: "Thanks for your interest! Coming soon.",
+    lang_confirm_title: "Language / Тіл",
+    lang_confirm_sub: "Detected from your device. Confirm or change it.",
+    lang_confirm_ok: "Confirm",
+    profile_local_hint: "Profile is stored on this device. Sign in to keep it forever.",
+    share_btn: "Share with a friend",
+    share_text: "Alga Play — play Kazakh games!",
+    copied: "Link copied",
+    feedback_link: "Feedback (Telegram)",
   },
 };

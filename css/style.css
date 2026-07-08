@@ -304,6 +304,31 @@ button { font: inherit; cursor: pointer; }
   width: 100%; background: var(--bg-2); border: 1px solid var(--line); color: var(--text);
   border-radius: 10px; padding: 10px 12px; font-size: 15px; margin: 8px 0 14px;
 }
+/* first-run language confirm */
+.lang-choices { display: flex; flex-direction: column; gap: 8px; margin: 12px 0 14px; }
+.lang-choice {
+  width: 100%; min-height: 46px; text-align: left; padding: 0 16px;
+  background: var(--bg-2); color: var(--text); border: 1px solid var(--line);
+  border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer;
+}
+.lang-choice.sel { border-color: var(--gold); color: var(--gold-soft); box-shadow: 0 0 0 1px var(--gold) inset; }
+#lang-ok { width: 100%; min-height: 46px; }
+
+/* profile: local hint + share */
+.profile-local-hint { font-size: 12px; margin-top: 12px; line-height: 1.4; }
+.share-btn { margin-top: 10px; width: 100%; min-height: 40px; }
+
+/* tasks claimable badge (任务置顶) */
+.claim-badge {
+  display: inline-block; margin-left: 8px; vertical-align: middle;
+  background: var(--gold); color: #5b4500; font-size: 11px; font-weight: 800;
+  border-radius: 999px; padding: 1px 8px;
+}
+
+/* footer feedback link */
+.feedback-link { display: inline-block; margin-left: 10px; color: var(--sky); text-decoration: none; }
+.feedback-link:hover { text-decoration: underline; }
+
 /* payment-intent probe card (付费探针) */
 .probe-card {
   margin-top: 14px; padding: 14px; border-radius: 12px;
