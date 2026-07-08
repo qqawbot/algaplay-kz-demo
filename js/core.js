@@ -108,6 +108,15 @@ const App = (() => {
       if (S.beans >= stake) onStart();   // enough now → straight into the game
     };
   }
+  // Lightweight analytics landing point (V1④ formalizes the real pipeline & schema).
+  function track(event, props) {
+    try {
+      const rec = { event, ...props, t: Date.now() };
+      (window.__algaEvents = window.__algaEvents || []).push(rec);
+      if (window.__algaEvents.length > 200) window.__algaEvents.shift();
+    } catch (e) { /* never block gameplay on analytics */ }
+  }
+
   // Every game reports through here: outcome "win" | "lose" | "draw", beansDelta already net
   function reportGame(outcome, beansDelta) {
     S.stats.games++;
@@ -118,6 +127,9 @@ const App = (() => {
     addBeans(beansDelta);
     save();
     renderTasks(); renderProfile();
+    track("game_end", { outcome });
+    // win high moment: the one place we ask for install (PWA module decides how)
+    if (outcome === "win") document.dispatchEvent(new CustomEvent("alga:gamewin"));
   }
 
   /* ---------- daily tasks ---------- */
@@ -238,7 +250,7 @@ const App = (() => {
 
   return {
     init, go, t, setLang, lang: () => S.lang,
-    beans, addBeans, canAfford, tryStake, reportGame,
+    beans, addBeans, canAfford, tryStake, reportGame, track,
     displayName, openModal, closeModal, toast,
     el, shuffle, sleep, escapeHtml,
   };

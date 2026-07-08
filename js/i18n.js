@@ -116,6 +116,12 @@ const I18N = {
     bk_asyq_btn: "Асық ат (тегін) →",
     bk_relief_btn: "Күнделікті сыйлық ал (+{n} 🫘)",
     bk_relief_gone: "Бүгінгі сыйлық алынды. Ертең қайта келіңіз.",
+    pwa_title: "Негізгі экранға қосыңыз",
+    pwa_sub: "Alga Play-ды қолданба ретінде ашыңыз — жылдам әрі офлайн жұмыс істейді.",
+    pwa_step1: "Төмендегі «Бөлісу» түймесін басыңыз",
+    pwa_step2: "«Негізгі экранға қосу» дегенді таңдаңыз",
+    pwa_step3: "«Қосу» түймесін басыңыз — дайын!",
+    pwa_ok: "Түсінікті",
   },
 
   ru: {
@@ -230,6 +236,12 @@ const I18N = {
     bk_asyq_btn: "Играть в Асык (бесплатно) →",
     bk_relief_btn: "Забрать ежедневный бонус (+{n} 🫘)",
     bk_relief_gone: "Сегодняшний бонус уже получен. Возвращайтесь завтра.",
+    pwa_title: "Добавьте на главный экран",
+    pwa_sub: "Откройте Alga Play как приложение — быстро и работает офлайн.",
+    pwa_step1: "Нажмите кнопку «Поделиться» внизу",
+    pwa_step2: "Выберите «На экран «Домой»»",
+    pwa_step3: "Нажмите «Добавить» — готово!",
+    pwa_ok: "Понятно",
   },
 
   en: {
@@ -344,5 +356,11 @@ const I18N = {
     bk_asyq_btn: "Play Asyq (free) →",
     bk_relief_btn: "Claim daily bonus (+{n} 🫘)",
     bk_relief_gone: "Today's bonus is claimed. Come back tomorrow.",
+    pwa_title: "Add to home screen",
+    pwa_sub: "Open Alga Play like an app — faster and works offline.",
+    pwa_step1: "Tap the Share button below",
+    pwa_step2: "Choose \"Add to Home Screen\"",
+    pwa_step3: "Tap \"Add\" — done!",
+    pwa_ok: "Got it",
   },
 };

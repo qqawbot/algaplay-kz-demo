@@ -1,0 +1,18 @@
+{
+  "name": "Alga Play — Қазақ ойындары",
+  "short_name": "Alga Play",
+  "description": "Белка, Тоғызқұмалақ, Дурак, Асық ату — бір платформада.",
+  "lang": "kk",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b1d26",
+  "theme_color": "#0b1d26",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icons/icon-maskable.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

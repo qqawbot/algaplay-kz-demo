@@ -17,5 +17,6 @@
 
   window.addEventListener("hashchange", () => App.go((location.hash || "#lobby").slice(1)));
 
+  PWA.register();
   App.init();
 })();
