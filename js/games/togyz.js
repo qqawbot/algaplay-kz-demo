@@ -225,13 +225,13 @@ const GameTogyz = (() => {
   function finish() {
     if (st.winner === 0) {
       statusMsg = t("togyz_win", { n: STAKE });
-      App.reportGame("win", STAKE);
+      App.reportGame("win", STAKE, "togyz");
     } else if (st.winner === 1) {
       statusMsg = t("togyz_lose", { n: STAKE });
-      App.reportGame("lose", -STAKE);
+      App.reportGame("lose", -STAKE, "togyz");
     } else {
       statusMsg = t("togyz_draw");
-      App.reportGame("draw", 0);
+      App.reportGame("draw", 0, "togyz");
     }
   }
 

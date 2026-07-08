@@ -91,9 +91,9 @@ const GameDurak = (() => {
     if (!e0 && !e1) return false;
     st.over = true;
     st.winner = e0 && e1 ? -1 : e0 ? 0 : 1;
-    if (st.winner === 0) { st.msg = t("durak_win", { n: STAKE }); App.reportGame("win", STAKE); }
-    else if (st.winner === 1) { st.msg = t("durak_lose", { n: STAKE }); App.reportGame("lose", -STAKE); }
-    else { st.msg = t("draw"); App.reportGame("draw", 0); }
+    if (st.winner === 0) { st.msg = t("durak_win", { n: STAKE }); App.reportGame("win", STAKE, "durak"); }
+    else if (st.winner === 1) { st.msg = t("durak_lose", { n: STAKE }); App.reportGame("lose", -STAKE, "durak"); }
+    else { st.msg = t("draw"); App.reportGame("draw", 0, "durak"); }
     return true;
   }
 

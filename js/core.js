@@ -11,6 +11,9 @@ const App = (() => {
     tasks: { date: "", play: 0, wins: 0, claimed: {} },
     relief: { date: "", used: false },   // daily relief beans (救济豆)
     freeFirst: {},                        // per-game first-game-free used (首局免入场)
+    anon: "",                             // anonymous id (匿名标识, non-PII)
+    firstSeen: "",                        // local first-seen date; V2 reconciles vs server-first-seen
+    lastSeen: "",                         // for revisit detection (回访)
   });
 
   let S = load();
@@ -83,12 +86,13 @@ const App = (() => {
   // Games call this instead of canAfford: gates the stake, applies 首局免入场,
   // or opens the guided bankruptcy modal (never a dead toast, never ads).
   function tryStake(gameId, stake, onStart) {
-    if (S.beans >= stake) { onStart(); return; }
+    const start = () => { emitGameStart(gameId); onStart(); };
+    if (S.beans >= stake) { start(); return; }
     if (!S.freeFirst[gameId]) {              // 首局免入场: per-game first game is free
       S.freeFirst[gameId] = true; save();
-      toast(t("first_free")); onStart(); return;
+      toast(t("first_free")); start(); return;
     }
-    bankruptModal(gameId, stake, onStart);
+    bankruptModal(gameId, stake, start);
   }
   function bankruptModal(gameId, stake, onStart) {
     const reliefBtn = reliefAvailable()
@@ -108,17 +112,51 @@ const App = (() => {
       if (S.beans >= stake) onStart();   // enough now → straight into the game
     };
   }
-  // Lightweight analytics landing point (V1④ formalizes the real pipeline & schema).
+  /* ---------- analytics (§14 schema: one action / common dims / no PII / droppable) ----------
+     V1 buffers in memory + a small localStorage ring; V2 ships to the single collector endpoint.
+     Common dims ride every event: anon id, platform, lang, app version, first-seen, client time. */
+  const APP_VERSION = "1.0.0";
+  function platformTag() {
+    const ua = navigator.userAgent || "";
+    if (/android/i.test(ua)) return "android";
+    if (/iphone|ipad|ipod/i.test(ua)) return "ios";
+    return "web";
+  }
+  function ensureIdentity() {
+    let changed = false;
+    if (!S.anon) { S.anon = "a_" + Math.random().toString(36).slice(2, 12) + today().replace(/-/g, ""); changed = true; }
+    if (!S.firstSeen) { S.firstSeen = today(); changed = true; }
+    if (changed) save();
+  }
   function track(event, props) {
     try {
-      const rec = { event, ...props, t: Date.now() };
-      (window.__algaEvents = window.__algaEvents || []).push(rec);
-      if (window.__algaEvents.length > 200) window.__algaEvents.shift();
+      const rec = Object.assign(
+        { ev: event, anon: S.anon, plat: platformTag(), lang: S.lang, ver: APP_VERSION, fs: S.firstSeen, ct: new Date().toISOString() },
+        props || {}
+      );
+      const buf = (window.__algaEvents = window.__algaEvents || []);
+      buf.push(rec);
+      if (buf.length > 200) buf.shift();
     } catch (e) { /* never block gameplay on analytics */ }
+  }
+  // 打开 + 回访: called once at init after identity is ensured
+  function trackSession() {
+    track("app_open");
+    if (S.lastSeen && S.lastSeen !== today() && S.firstSeen !== today()) {
+      const days = Math.round((Date.parse(today()) - Date.parse(S.firstSeen)) / 864e5);
+      track("revisit", { days_since_first: days });
+    }
+    S.lastSeen = today(); save();
+  }
+  // 首局开始 + 完局(每局): single entry every game start funnels through
+  function emitGameStart(game) {
+    track("game_start", { game });
+    if (S.stats.games === 0) track("first_game_start", { game });
   }
 
   // Every game reports through here: outcome "win" | "lose" | "draw", beansDelta already net
-  function reportGame(outcome, beansDelta) {
+  function reportGame(outcome, beansDelta, game) {
+    const wasFirst = S.stats.games === 0;
     S.stats.games++;
     if (outcome === "win") S.stats.wins++;
     touchTasks();
@@ -127,7 +165,8 @@ const App = (() => {
     addBeans(beansDelta);
     save();
     renderTasks(); renderProfile();
-    track("game_end", { outcome });
+    track("game_end", { outcome, game: game || null });
+    if (wasFirst) track("first_game_complete", { outcome, game: game || null });
     // win high moment: the one place we ask for install (PWA module decides how)
     if (outcome === "win") document.dispatchEvent(new CustomEvent("alga:gamewin"));
   }
@@ -171,6 +210,20 @@ const App = (() => {
       }
       box.appendChild(row);
     });
+    renderProbe(box);
+  }
+
+  /* ---------- payment-intent probe (付费探针): fake tier, records intent only, no money ---------- */
+  function renderProbe(box) {
+    const card = el("div", "probe-card");
+    card.innerHTML =
+      `<div class="probe-head"><span class="probe-title">${t("probe_title")}</span>` +
+      `<span class="probe-soon">${t("probe_soon")}</span></div>` +
+      `<div class="probe-sub muted">${t("probe_sub")}</div>`;
+    const btn = el("button", "probe-btn", t("probe_tier"));
+    btn.onclick = () => { track("probe_click", { tier: "star25" }); toast(t("probe_thanks")); };
+    card.appendChild(btn);
+    box.appendChild(card);
   }
 
   /* ---------- profile ---------- */
@@ -238,6 +291,7 @@ const App = (() => {
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
   function init() {
+    ensureIdentity();
     document.getElementById("lang-select").value = S.lang;
     document.getElementById("lang-select").onchange = e => setLang(e.target.value);
     document.getElementById("btn-edit-name").onclick = editName;
@@ -245,12 +299,13 @@ const App = (() => {
       if (e.target.id === "modal-backdrop") closeModal();
     });
     applyI18n(); renderTasks(); renderProfile();
+    trackSession();
     go((location.hash || "#lobby").slice(1));
   }
 
   return {
     init, go, t, setLang, lang: () => S.lang,
-    beans, addBeans, canAfford, tryStake, reportGame, track,
+    beans, addBeans, canAfford, tryStake, reportGame, track, emitGameStart,
     displayName, openModal, closeModal, toast,
     el, shuffle, sleep, escapeHtml,
   };

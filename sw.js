@@ -1,20 +1,20 @@
 /* Alga Play KZ — service worker. Static app-shell cache (offline-capable, installable). */
-const CACHE = "algaplay-v2";
+const CACHE = "algaplay-v3";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icons/icon.svg",
   "./icons/icon-maskable.svg",
-  "./css/style.css?v=2",
-  "./js/i18n.js?v=2",
-  "./js/core.js?v=2",
-  "./js/pwa.js?v=2",
-  "./js/games/togyz.js?v=2",
-  "./js/games/belka.js?v=2",
-  "./js/games/durak.js?v=2",
-  "./js/games/asyq.js?v=2",
-  "./js/app.js?v=2",
+  "./css/style.css?v=3",
+  "./js/i18n.js?v=3",
+  "./js/core.js?v=3",
+  "./js/pwa.js?v=3",
+  "./js/games/togyz.js?v=3",
+  "./js/games/belka.js?v=3",
+  "./js/games/durak.js?v=3",
+  "./js/games/asyq.js?v=3",
+  "./js/app.js?v=3",
 ];
 
 self.addEventListener("install", e => {

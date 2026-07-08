@@ -28,6 +28,7 @@ const GameAsyq = (() => {
   }
 
   function startGame() {
+    App.emitGameStart("asyq");   // Асық is free (no ante), so it doesn't go through tryStake
     st = {
       saqa: { x: SAQA_START.x, y: SAQA_START.y, vx: 0, vy: 0, r: 16 },
       asyqs: [],
@@ -157,7 +158,7 @@ const GameAsyq = (() => {
   function finish() {
     st.phase = "over";
     const beans = st.hits * BEAN_PER_HIT;
-    App.reportGame(st.hits >= 3 ? "win" : "lose", beans);
+    App.reportGame(st.hits >= 3 ? "win" : "lose", beans, "asyq");
     App.toast(t("asyq_over", { hits: st.hits, n: beans }));
     const b = App.el("div", "result-banner");
     b.innerHTML = `<h3 class="${st.hits >= 3 ? "win" : ""}">${t("asyq_over", { hits: st.hits, n: beans })}</h3>`;

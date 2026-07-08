@@ -122,6 +122,11 @@ const I18N = {
     pwa_step2: "«Негізгі экранға қосу» дегенді таңдаңыз",
     pwa_step3: "«Қосу» түймесін басыңыз — дайын!",
     pwa_ok: "Түсінікті",
+    probe_title: "Дамытушыны қолдау",
+    probe_soon: "Жақында",
+    probe_sub: "Тегін ойнай беріңіз. Қаласаңыз, кейін қолдай аласыз.",
+    probe_tier: "25 жұлдыз дән ≈ 500 ₸",
+    probe_thanks: "Қызығушылығыңызға рахмет! Жақында қосылады.",
   },
 
   ru: {
@@ -242,6 +247,11 @@ const I18N = {
     pwa_step2: "Выберите «На экран «Домой»»",
     pwa_step3: "Нажмите «Добавить» — готово!",
     pwa_ok: "Понятно",
+    probe_title: "Поддержать разработчика",
+    probe_soon: "Скоро",
+    probe_sub: "Играйте бесплатно. При желании сможете поддержать позже.",
+    probe_tier: "25 звёздных бобов ≈ 500 ₸",
+    probe_thanks: "Спасибо за интерес! Скоро будет доступно.",
   },
 
   en: {
@@ -362,5 +372,10 @@ const I18N = {
     pwa_step2: "Choose \"Add to Home Screen\"",
     pwa_step3: "Tap \"Add\" — done!",
     pwa_ok: "Got it",
+    probe_title: "Support the developer",
+    probe_soon: "Soon",
+    probe_sub: "Play free. If you like it, you can support us later.",
+    probe_tier: "25 star beans ≈ 500 ₸",
+    probe_thanks: "Thanks for your interest! Coming soon.",
   },
 };

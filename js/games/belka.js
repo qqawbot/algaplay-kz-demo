@@ -135,8 +135,8 @@ const GameBelka = (() => {
       st.msg = w === 0 ? t("belka_round_win", { a: my, b: their }) : t("belka_round_lose", { a: my, b: their });
       if (st.eggs[w] >= ROUNDS_TO_WIN) {
         st.phase = "match-over";
-        if (w === 0) { st.msg = t("belka_match_win", { n: STAKE }); App.reportGame("win", STAKE); }
-        else { st.msg = t("belka_match_lose", { n: STAKE }); App.reportGame("lose", -STAKE); }
+        if (w === 0) { st.msg = t("belka_match_win", { n: STAKE }); App.reportGame("win", STAKE, "belka"); }
+        else { st.msg = t("belka_match_lose", { n: STAKE }); App.reportGame("lose", -STAKE, "belka"); }
         render();
         return;
       }
