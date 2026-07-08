@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Alga Play — Қазақстанның ойын платформасы: Белка, Тоғызқұмалақ, Дурак, Асық ату">
+  <title>Alga Play · Қазақ ойындары</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2300afca'/%3E%3Ccircle cx='50' cy='50' r='24' fill='%23fec50c'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css?v=2">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" onclick="App.go('lobby')">
+      <span class="brand-sun"></span>
+      <span class="brand-name">Alga <b>Play</b></span>
+    </div>
+    <div class="topbar-right">
+      <div class="beans-chip" title="beans">
+        <span class="bean-ico"></span><span id="beans-balance">0</span>
+      </div>
+      <select id="lang-select" class="lang-select" aria-label="Language">
+        <option value="kk">ҚАЗ</option>
+        <option value="ru">РУС</option>
+        <option value="en">ENG</option>
+      </select>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ===================== LOBBY ===================== -->
+    <section id="view-lobby" class="view">
+      <div class="hero">
+        <div class="hero-ornament"></div>
+        <h1 data-i18n="hero_title"></h1>
+        <p data-i18n="hero_sub"></p>
+      </div>
+
+      <h2 class="section-title" data-i18n="games_title"></h2>
+      <div class="game-grid">
+        <div class="game-card game-belka" onclick="App.go('belka')">
+          <div class="game-art">🐿️</div>
+          <div class="game-info">
+            <h3>Белка</h3>
+            <p data-i18n="belka_tag"></p>
+            <span class="game-badge" data-i18n="badge_flagship"></span>
+          </div>
+        </div>
+        <div class="game-card game-togyz" onclick="App.go('togyz')">
+          <div class="game-art">⚫</div>
+          <div class="game-info">
+            <h3>Тоғызқұмалақ</h3>
+            <p data-i18n="togyz_tag"></p>
+            <span class="game-badge badge-nat" data-i18n="badge_national"></span>
+          </div>
+        </div>
+        <div class="game-card game-durak" onclick="App.go('durak')">
+          <div class="game-art">🃏</div>
+          <div class="game-info">
+            <h3>Дурак</h3>
+            <p data-i18n="durak_tag"></p>
+            <span class="game-badge badge-pop" data-i18n="badge_popular"></span>
+          </div>
+        </div>
+        <div class="game-card game-asyq" onclick="App.go('asyq')">
+          <div class="game-art">🦴</div>
+          <div class="game-info">
+            <h3>Асық ату</h3>
+            <p data-i18n="asyq_tag"></p>
+            <span class="game-badge badge-nat" data-i18n="badge_folk"></span>
+          </div>
+        </div>
+        <div class="game-card soon">
+          <div class="game-art">🎲</div>
+          <div class="game-info">
+            <h3>Нарды</h3>
+            <p data-i18n="soon_sub"></p>
+            <span class="game-badge badge-soon" data-i18n="badge_soon"></span>
+          </div>
+        </div>
+        <div class="game-card soon">
+          <div class="game-art">🪨</div>
+          <div class="game-info">
+            <h3>Бес тас</h3>
+            <p data-i18n="soon_sub"></p>
+            <span class="game-badge badge-soon" data-i18n="badge_soon"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lobby-columns">
+        <div class="panel">
+          <h2 class="section-title" data-i18n="tasks_title"></h2>
+          <div id="tasks-list"></div>
+        </div>
+        <div class="panel">
+          <h2 class="section-title" data-i18n="profile_title"></h2>
+          <div class="profile-row">
+            <div class="avatar" id="profile-avatar">?</div>
+            <div>
+              <div class="profile-name-line">
+                <span id="profile-name"></span>
+                <button class="btn-mini" id="btn-edit-name" data-i18n="edit"></button>
+              </div>
+              <div class="profile-sub" id="profile-rank"></div>
+            </div>
+          </div>
+          <div class="stats-grid" id="profile-stats"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BELKA ===================== -->
+    <section id="view-belka" class="view" hidden>
+      <div class="game-head">
+        <button class="btn-back" onclick="App.go('lobby')">←</button>
+        <h2>Белка <span class="muted">· 2v2</span></h2>
+        <button class="btn-mini" id="belka-rules-btn" data-i18n="rules"></button>
+      </div>
+      <div id="belka-root"></div>
+    </section>
+
+    <!-- ===================== TOGYZ ===================== -->
+    <section id="view-togyz" class="view" hidden>
+      <div class="game-head">
+        <button class="btn-back" onclick="App.go('lobby')">←</button>
+        <h2>Тоғызқұмалақ</h2>
+        <button class="btn-mini" id="togyz-rules-btn" data-i18n="rules"></button>
+      </div>
+      <div id="togyz-root"></div>
+    </section>
+
+    <!-- ===================== DURAK ===================== -->
+    <section id="view-durak" class="view" hidden>
+      <div class="game-head">
+        <button class="btn-back" onclick="App.go('lobby')">←</button>
+        <h2>Дурак <span class="muted" data-i18n="durak_kind"></span></h2>
+        <button class="btn-mini" id="durak-rules-btn" data-i18n="rules"></button>
+      </div>
+      <div id="durak-root"></div>
+    </section>
+
+    <!-- ===================== ASYQ ===================== -->
+    <section id="view-asyq" class="view" hidden>
+      <div class="game-head">
+        <button class="btn-back" onclick="App.go('lobby')">←</button>
+        <h2>Асық ату</h2>
+        <button class="btn-mini" id="asyq-rules-btn" data-i18n="rules"></button>
+      </div>
+      <div id="asyq-root"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span data-i18n="footer_line"></span>
+  </footer>
+
+  <!-- modal -->
+  <div id="modal-backdrop" class="modal-backdrop" hidden>
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modal-title"></h3>
+        <button class="btn-mini" onclick="App.closeModal()">✕</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/i18n.js?v=2"></script>
+  <script src="js/core.js?v=2"></script>
+  <script src="js/games/togyz.js?v=2"></script>
+  <script src="js/games/belka.js?v=2"></script>
+  <script src="js/games/durak.js?v=2"></script>
+  <script src="js/games/asyq.js?v=2"></script>
+  <script src="js/app.js?v=2"></script>
+</body>
+</html>
